@@ -39,7 +39,7 @@ export const getServerSideProps = async ({ req }) => {
   try {
     const resApi = await axios.get("http://localhost:8000/api/posts", {
       headers: {
-        Authorization: `Bearer1 ${req.cookies.token}`,
+        Authorization: `Bearer ${req.cookies.token}`,
       },
     });
 
