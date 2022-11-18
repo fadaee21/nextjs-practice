@@ -3,8 +3,6 @@ var cookie = require("cookie");
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    console.log(req.cookies.token);
-
     try {
       const resApi = await axios("http://localhost:8000/api/logout", {
         method: "POST",
@@ -14,8 +12,6 @@ export default async function handler(req, res) {
       });
 
       const data = await resApi.data;
-
-      console.log(data);
 
       if (resApi.status === 200) {
         res.setHeader(
@@ -28,13 +24,12 @@ export default async function handler(req, res) {
             secure: process.env.NODE_ENV !== "development",
           })
         );
-
         res.status(200).json({ user: "success" });
       } else {
         res.status(resApi.status).json({ message: data });
       }
     } catch (e) {
-      res.status(500).json({ message: { err: ["Server Error"] } });
+      res.status(e.response.status).json({ message: [e.response.statusText] });
     }
   } else {
     res.setHeader("Allow", ["POST"]);

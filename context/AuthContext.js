@@ -15,37 +15,39 @@ export const AuthProvider = ({ children }) => {
     checkUserLoggedIn();
   }, []);
 
-  // const handleError = (message) => {
-  //     const errors = [];
-  //     Object.keys(message).map((key) => {
-  //         message[key].map((e) => {
-  //             errors.push(e)
-  //         })
-  //     })
-  //     return errors.join();
-  // }
+  const handleError = (message) => {
+    const errors = [];
+    Object.keys(message).map((key) => {
+      message[key].map((e) => {
+        errors.push(e);
+      });
+    });
+    return errors.join();
+  };
 
   // Register user
   const register = async (user) => {
     setError(null);
     setLoading(true);
-
-    const res = await axios("/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      data: user,
-    });
-
-    const data = await res.data;
-
-    if (res.status === 200) {
-      setLoading(false);
-      router.push("/auth/login");
-    } else {
-      setError(/*handleError*/ data.message);
+    try {
+      const res = await axios("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        data: user,
+      });
+      const data = await res.data;
+      if (res.status === 201) {
+        setLoading(false);
+        router.push("/");
+      } else {
+        console.log(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      setError(handleError(error.response.data.message));
       setLoading(false);
     }
   };
@@ -54,25 +56,29 @@ export const AuthProvider = ({ children }) => {
   const login = async (user) => {
     setError(null);
     setLoading(true);
+    try {
+      const res = await axios("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        data: user,
+      });
 
-    const res = await axios("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      data: user,
-    });
+      const data = await res.data;
 
-    const data = await res.data;
-
-    if (res.status === 200) {
-      setUser(data.user);
+      if (res.status === 200) {
+        setUser(data.user);
+        setLoading(false);
+        router.push("/");
+      } else {
+        console.log(data);
+        setLoading(false);
+      }
+    } catch (error) {
       setLoading(false);
-      router.push("/");
-    } else {
-      setError(/*handleError*/ data.message);
-      setLoading(false);
+      setError(handleError(error.response.data.message));
     }
   };
 
@@ -80,22 +86,27 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setError(null);
 
-    const res = await axios("/api/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      data: user,
-    });
+    try {
+      const res = await axios("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        data: user,
+      });
 
-    const data = await res.data;
+      const data = await res.data;
 
-    if (res.status === 200) {
-      setUser(null);
-      router.push("/");
-    } else {
-      setError(/*handleError*/ data.message);
+      if (res.status === 200) {
+        setUser(null);
+        router.push("/");
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      setError(handleError(error.response.data));
     }
   };
 
@@ -103,16 +114,21 @@ export const AuthProvider = ({ children }) => {
   const checkUserLoggedIn = async () => {
     setError(null);
 
-    const res = await axios("/api/auth/me", {
-      method: "GET",
-    });
-    const data = await res.data;
+    try {
+      const res = await axios("/api/auth/me", {
+        method: "GET",
+      });
+      const data = await res.data;
 
-    if (res.status === 200) {
-      setUser(data.user);
-    } else {
+      if (res.status === 200) {
+        setUser(data.user);
+      } else {
+        setUser(null);
+        console.log(data);
+      }
+    } catch (error) {
       setUser(null);
-      setError(/*handleError*/ data.message);
+      setError(handleError(error.response.data));
     }
   };
 

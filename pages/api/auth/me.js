@@ -1,10 +1,10 @@
 import axios from "axios";
-var cookie = require("cookie");
+// var cookie = require("cookie");
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     if (!req.cookies.token) {
-      res.status(403).json({ message: { err: ["NOT AUTHORIZED1212"] } });
+      res.status(403).json({ message: ["NOT AUTHORIZED"] });
       return;
     }
 
@@ -15,18 +15,15 @@ export default async function handler(req, res) {
           Authorization: `Bearer ${req.cookies.token}`,
         },
       });
-
       const data = await resApi.data;
-
       if (resApi.status === 200) {
         res.status(200).json({ user: data.user });
       } else {
-        res
-          .status(resApi.status)
-          .json({ message: { err: ["USER FORBIDDEN1212"] } });
+        res.status(resApi.status).json({ message: data });
       }
     } catch (e) {
-      res.status(500).json({ message: { err: ["Server Error"] } });
+      console.log(e);
+      res.status(e.response.status).json(e.response.data);
     }
   } else {
     res.setHeader("Allow", ["GET"]);

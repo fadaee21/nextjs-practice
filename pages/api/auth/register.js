@@ -16,7 +16,6 @@ export default async function handler(req, res) {
           c_password: req.body.confirmPassword,
         },
       });
-      console.log(resApi);
 
       const data = await resApi.data;
 
@@ -26,8 +25,7 @@ export default async function handler(req, res) {
         res.status(resApi.status).json({ message: data });
       }
     } catch (e) {
-      // console.log(e.message);
-      res.status(500).json({ message: { err: ["Server Error"] } });
+      res.status(e.response.status).json({ message: e.response.data });
     }
   } else {
     res.setHeader("Allow", ["POST"]);

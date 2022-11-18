@@ -29,14 +29,13 @@ export default async function handler(req, res) {
             secure: process.env.NODE_ENV !== "development",
           })
         );
-
         res.status(200).json({ user: data.user });
-        //   console.log(data.user,"aaaaaaaaaaa");
       } else {
         res.status(resApi.status).json({ message: data });
       }
     } catch (e) {
-      res.status(500).json({ message: { err: ["Server Error"] } });
+      console.log(e.response.data)
+      res.status(e.response.status).json({ message: e.response.data });
     }
   } else {
     res.setHeader("Allow", ["POST"]);
