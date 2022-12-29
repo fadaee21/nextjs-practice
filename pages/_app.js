@@ -1,22 +1,14 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import { useEffect } from 'react'
-import Header from '../components/Header';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {AuthProvider} from '../context/AuthContext'
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect } from "react";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    import('bootstrap/dist/js/bootstrap.bundle.js')
+    import("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
 
-  return (
-    <AuthProvider>
-      <Header />
-      <Component {...pageProps} />
-      <ToastContainer />
-    </AuthProvider>
-  )
+  return <Component {...pageProps} />;
 }
 
-export default MyApp
+export default MyApp;
