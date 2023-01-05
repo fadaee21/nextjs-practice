@@ -1,23 +1,7 @@
-import FeaturedPosts from "../components/home-page/featured-posts";
-import Hero from "../components/home-page/hero";
-import { getFeaturedPOsts } from "../lib/posts-util";
+import StartingPageContent from '../components/starting-page/starting-page';
 
-const Home = ({ posts }) => {
-  return (
-    <>
-      <Hero />
-      <FeaturedPosts posts={posts} />
-    </>
-  );
-};
+function HomePage() {
+  return <StartingPageContent />;
+}
 
-export default Home;
-
-export const getStaticProps = async () => {
-  const featuredPosts = getFeaturedPOsts();
-  return {
-    props: {
-      posts: featuredPosts,
-    },
-  };
-};
+export default HomePage;
